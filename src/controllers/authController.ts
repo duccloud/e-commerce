@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import User, { UserRole } from '../models/User';
+import User, { UserRole } from '../models/user';
 import { hashPassword, comparePasswords } from '../utils/passwordUtils';
 import { sendResponse } from '../utils/responseUtils';
 import { UserAttributes } from '../models/interfaces';
@@ -26,10 +26,10 @@ const validatePassword = (password: string): boolean => {
 };
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-   const { username, password, first_name, last_name, role } = req.body;
+   const { username, password, firstName, lastName, role } = req.body;
 
    try {
-       if (!username || !password || !first_name || !last_name) {
+       if (!username || !password || !firstName || !lastName) {
            next(new BadRequestError('Username, password, first name, and last name are required'));
            return;
        }
@@ -54,8 +54,8 @@ export const register = async (req: Request, res: Response, next: NextFunction):
        const newUser = await User.create({
            username,
            password: hashedPassword,
-           first_name,
-           last_name,
+           firstName,
+           lastName,
            role
        } as UserAttributes);
 

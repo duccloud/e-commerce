@@ -8,6 +8,7 @@ export const errorHandler = (
    res: Response,
    next: NextFunction
 ): void => {
+   console.log("err iss ", err);
    if (err instanceof HttpError) {
       res.status(err.statusCode).json({ message: err.message });
    } else {

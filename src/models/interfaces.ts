@@ -1,14 +1,23 @@
-import { UserRole } from '../models/User';
+import { UserRole } from './user';
 
-interface UserAttributes {
+export interface UserAttributes {
     id: number;
     username: string;
     password: string;
     role: UserRole;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
 
-export { UserAttributes };
+export interface ProductAttributes {
+    id?: number;
+    name: string;
+    description: string;
+    price: number;
+    categoryId: number;
+    inventoryCount: number;
+    createdAt?: Date;
+    updatedAt?: Date;
+}

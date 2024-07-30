@@ -3,6 +3,7 @@ import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
+import productRoutes from './routes/productRoutes';
 import { errorHandler } from './middlewares/errorMiddleware';
 import sequelize from './config/database';
 
@@ -17,7 +18,8 @@ if (process.env.SEQUELIZE_FORCE_SYNC === 'true') {
 
 app.use(bodyParser.json());
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/products', productRoutes);
 app.use(errorHandler);
 
 export default app;
