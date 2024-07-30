@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import User from '../models/User';
+import User, { UserRole } from '../models/User';
 import { hashPassword, comparePasswords } from '../utils/passwordUtils';
 import { sendResponse } from '../utils/responseUtils';
 import { UserAttributes } from '../models/interfaces';
@@ -26,35 +26,43 @@ const validatePassword = (password: string): boolean => {
 };
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-   const { username, password } = req.body;
+   const { username, password, first_name, last_name, role } = req.body;
 
    try {
-      if (!username || !password) {
-         next(new BadRequestError('Username and password are required'));
-         return;
-      }
+       if (!username || !password || !first_name || !last_name) {
+           next(new BadRequestError('Username, password, first name, and last name are required'));
+           return;
+       }
 
-      if (!validateUsername(username)) {
-         next(new BadRequestError('Invalid username. It should be between 3 and 30 characters and contain only alphanumeric characters and underscores.'));
-         return;
-      }
+       if (!validateUsername(username)) {
+           next(new BadRequestError('Invalid username. It should be between 3 and 30 characters and contain only alphanumeric characters and underscores.'));
+           return;
+       }
 
-      if (!validatePassword(password)) {
-         next(new BadRequestError('Invalid password. It should be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.'));
-         return;
-      }
+       if (!validatePassword(password)) {
+           next(new BadRequestError('Invalid password. It should be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.'));
+           return;
+       }
 
-      const hashedPassword = await hashPassword(password);
+       if (!Object.values(UserRole).includes(role)) {
+           next(new BadRequestError(`Invalid role. It should be one of ${Object.values(UserRole).join(', ')}`));
+           return;
+       }
 
-      const newUser = await User.create({
-         username,
-         password: hashedPassword,
-      } as UserAttributes);
+       const hashedPassword = await hashPassword(password);
 
-      sendResponse(res, HTTP_STATUS.CREATED, 'User registered successfully', { user: newUser });
+       const newUser = await User.create({
+           username,
+           password: hashedPassword,
+           first_name,
+           last_name,
+           role
+       } as UserAttributes);
+
+       sendResponse(res, HTTP_STATUS.CREATED, 'User registered successfully', { user: newUser });
 
    } catch (error) {
-      next(error);
+       next(error);
    }
 };
 
