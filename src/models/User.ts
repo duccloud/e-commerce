@@ -60,6 +60,8 @@ User.init(
         sequelize,
         modelName: 'User',
         tableName: 'users',
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
     }
 );
 
