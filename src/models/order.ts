@@ -4,7 +4,7 @@ import { OrderAttributes } from './interfaces';
 
 export enum OrderStatus {
     PENDING = 'PENDING',
-    SHIPPED = 'MEMBER',
+    SHIPPED = 'SHIPPED',
     DELIVERED = 'DELIVERED',
     CANCELLED = 'CANCELLED',
 }

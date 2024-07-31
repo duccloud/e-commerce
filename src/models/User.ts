@@ -4,7 +4,8 @@ import { UserAttributes } from './interfaces';
 
 export enum UserRole {
     ADMIN = 'ADMIN',
-    MEMBER = 'MEMBER',
+    CUSTOMER = 'CUSTOMER',
+    SELLER = 'SELLER'
 }
 
 class User extends Model<UserAttributes> implements UserAttributes {
@@ -41,9 +42,9 @@ User.init(
             allowNull: false,
         },
         role: {
-            type: DataTypes.ENUM(UserRole.ADMIN, UserRole.MEMBER),
+            type: DataTypes.ENUM(UserRole.ADMIN, UserRole.SELLER, UserRole.CUSTOMER),
             allowNull: false,
-            defaultValue: UserRole.MEMBER,
+            defaultValue: UserRole.CUSTOMER,
         },
         firstName: {
             type: DataTypes.STRING,

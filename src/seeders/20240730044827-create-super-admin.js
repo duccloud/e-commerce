@@ -9,37 +9,62 @@ module.exports = {
     // Hash the password for the super admin
     const adminPassword = await bcrypt.hash(process.env.SUPER_ADMIN_PASSWORD, 10);
 
-    // Hash the password for the new members
-    const memberPassword = await bcrypt.hash('helloworld', 10);
+    // Hash the password for the new customer
+    const customerPassword = await bcrypt.hash('helloworld', 10);
+    
+    // Hash the password for the new seller
+    const sellerPassword = await bcrypt.hash('helloworld', 10);
 
     return queryInterface.bulkInsert('users', [
       {
         username: process.env.SUPER_ADMIN_USERNAME,
         password: adminPassword,
         role: 'ADMIN',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         username: 'user1',
-        password: memberPassword,
-        role: 'MEMBER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        password: customerPassword,
+        role: 'CUSTOMER',
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         username: 'user2',
-        password: memberPassword,
-        role: 'MEMBER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        password: customerPassword,
+        role: 'CUSTOMER',
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         username: 'user3',
-        password: memberPassword,
-        role: 'MEMBER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        password: customerPassword,
+        role: 'CUSTOMER',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      // New sellers
+      {
+        username: 'seller1',
+        password: sellerPassword,
+        role: 'SELLER',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        username: 'seller2',
+        password: sellerPassword,
+        role: 'SELLER',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        username: 'seller3',
+        password: sellerPassword,
+        role: 'SELLER',
+        created_at: new Date(),
+        updated_at: new Date(),
       },
     ]);
   },
@@ -52,6 +77,9 @@ module.exports = {
           'user1',
           'user2',
           'user3',
+          'seller1',
+          'seller2',
+          'seller3',
         ],
       },
     });
