@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
 
 interface ProductCategoryAttributes {
-    id: number;
+    id?: number;
     name: string;
     createdAt?: Date;
     updatedAt?: Date;

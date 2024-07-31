@@ -11,6 +11,7 @@ class Product extends Model<ProductAttributes> implements ProductAttributes {
     public price!: number;
     public categoryId!: number;
     public inventoryCount!: number;
+    public outOfStock!: boolean;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -48,6 +49,12 @@ Product.init(
             type: DataTypes.INTEGER,
             field: 'inventory_count',
             allowNull: false,
+        },
+        outOfStock: {
+            type: DataTypes.BOOLEAN,
+            field: 'out_of_stock',
+            allowNull: false,
+            defaultValue: false,
         },
     },
     {

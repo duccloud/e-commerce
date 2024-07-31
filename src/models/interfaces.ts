@@ -2,7 +2,7 @@ import { UserRole } from './user';
 import { OrderStatus } from './order';
 
 export interface UserAttributes {
-    id: number;
+    id?: number;
     username: string;
     password: string;
     role: UserRole;
@@ -19,6 +19,7 @@ export interface ProductAttributes {
     price: number;
     categoryId: number;
     inventoryCount: number;
+    outOfStock?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }

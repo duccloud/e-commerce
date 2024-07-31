@@ -3,36 +3,62 @@ import Order, { OrderStatus } from '../models/order';
 import OrderItem from '../models/order-item';
 import Product from '../models/product';
 import { OrderAttributes, OrderItemAttributes } from '../models/interfaces';
+import sequelize from '../config/database';
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     const { items, totalPrice, status }: { items: OrderItemAttributes[], totalPrice: number, status: string } = req.body;
+
+    const transaction = await sequelize.transaction();
 
     try {
         // Convert status string to OrderStatus enum
         const orderStatus = OrderStatus[status as keyof typeof OrderStatus];
         if (!orderStatus) {
+            await transaction.rollback();
             return res.status(400).json({ message: 'Invalid order status' });
         }
 
-        const order = await Order.create({ totalPrice, status: orderStatus });
+        const order = await Order.create({ totalPrice, status: orderStatus }, { transaction });
+
         for (const item of items) {
-            const product = await Product.findByPk(item.productId);
+            const product = await Product.findByPk(item.productId, { transaction });
             if (!product) {
+                await transaction.rollback();
                 throw new Error(`Product with id ${item.productId} not found`);
             }
+
+            // Check inventory
+            if (product.inventoryCount < item.quantity) {
+                await transaction.rollback();
+                return res.status(400).json({ message: `Insufficient inventory for product ${product.name}` });
+            }
+
+            // Reduce inventory count
+            product.inventoryCount -= item.quantity;
+
+            // Update outOfStock flag
+            const stockThreshold = parseInt(process.env.STOCK_THRESHOLD || '10', 10);
+            product.outOfStock = product.inventoryCount < stockThreshold;
+
+            await product.save({ transaction });
+
+            // Create OrderItem
             await OrderItem.create({
                 orderId: order.id,
                 productId: item.productId,
                 quantity: item.quantity,
-            });
+            }, { transaction });
         }
 
         const orderWithItems = await Order.findByPk(order.id, {
             include: [OrderItem],
+            transaction,
         });
 
+        await transaction.commit();
         res.status(201).json(orderWithItems);
     } catch (error) {
+        await transaction.rollback();
         next(error);
     }
 };
