@@ -31,6 +31,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 'CUSTOMER'
       },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

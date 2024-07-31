@@ -5,6 +5,7 @@ export interface UserAttributes {
     id?: number;
     username: string;
     password: string;
+    email?: string;
     role: UserRole;
     firstName: string;
     lastName: string;
@@ -28,6 +29,7 @@ export interface OrderAttributes {
     id?: number;
     totalPrice: number;
     status: OrderStatus;
+    userId: number;
     createdAt?: Date;
     updatedAt?: Date;
 }

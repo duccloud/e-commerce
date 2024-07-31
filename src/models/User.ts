@@ -15,6 +15,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
     public role!: UserRole;
     public firstName!: string;
     public lastName!: string;
+    public email?: string;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -54,6 +55,10 @@ User.init(
         lastName: {
             type: DataTypes.STRING,
             field: 'last_name',
+            allowNull: false,
+        },
+        email: {
+            type: DataTypes.STRING,
             allowNull: false,
         }
     },

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from '../errors/HttpError';
 import { HTTP_STATUS } from '../constant/httpStatusCodes'
+import logger from '../config/logger';
 
 export const errorHandler = (
    err: Error,
@@ -8,7 +9,8 @@ export const errorHandler = (
    res: Response,
    next: NextFunction
 ): void => {
-   console.log("err iss ", err);
+   logger.error(`Error creating order: ${err.message}`);
+   
    if (err instanceof HttpError) {
       res.status(err.statusCode).json({ message: err.message });
    } else {
